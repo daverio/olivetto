@@ -30,3 +30,4 @@
 *.exe
 *.out
 *.app
+__pycache__/python_utils.cpython-311.pyc
