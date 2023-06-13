@@ -1,4 +1,4 @@
-PYTHON_MODULE := oliveto.so
+PYTHON_MODULE := ../oliveto.so
 
 SOURCE_PATH := /home/daverio/Documents/olivetto/cpp_module/src
 

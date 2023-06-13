@@ -4,11 +4,15 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
+struct Point{
+  double x;
+  double y;
+};
 
-class Oliveto
-{
+
+class Oliveto{
 private:
-
+  Point * border;
 public:
   void set_border(boost::python::numpy::ndarray const & array);
   /*tupple get_border();
