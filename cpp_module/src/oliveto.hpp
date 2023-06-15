@@ -3,24 +3,37 @@
 
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
-
-struct Point{
-  double x;
-  double y;
-};
+#include <iostream>
+#include "point.hpp"
 
 
 class Oliveto{
 private:
+  Point PointOffset;
   Point * border;
+  size_t borderSize;
+  Point * borderTrees;
+  size_t num_borderTrees;
+  Point * trees;
+  size_t num_trees;
 public:
+
+  Oliveto(){
+    border = nullptr;
+    borderTrees = nullptr;
+    trees = nullptr;
+  }
+
+  ~Oliveto()
+  {
+    if(border != nullptr) delete[] border;
+    if(borderTrees != nullptr) delete[] borderTrees;
+    if(trees != nullptr) delete[] trees;
+  }
+
   void set_border(boost::python::numpy::ndarray const & array);
-  /*tupple get_border();
-
-  add_tree_to_boarder(double average_dist, double spread);
-
-  tuple get_border_tree();
-  */
+  void add_tree_to_border(double average_dist, double spread);
+  boost::python::numpy::ndarray get_border_trees();
 
 };
 
