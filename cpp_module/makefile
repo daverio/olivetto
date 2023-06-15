@@ -8,10 +8,11 @@ CXXFLAGS_COMPILE := -std=c++17 -O3 -fPIC
 INCLUDES := -I$(SOURCE_PATH) -I/usr/include/python3.11/
 
 CXXFLAGS_LINKAGE := -L /lib64 -shared -std=c++17 -O3
-LIBS := -lpython3 -lboost_python3 -lboost_numpy3
+LIBS := -lpython3 -lboost_python3 -lboost_numpy3 -lgsl -lgslcblas -lm
 
 OBJECTS := $(SOURCE_PATH)/oliveto.o \
 		   $(SOURCE_PATH)/point.o \
+		   $(SOURCE_PATH)/polygone_tests.o \
 		   $(SOURCE_PATH)/wrapper.o
 
 

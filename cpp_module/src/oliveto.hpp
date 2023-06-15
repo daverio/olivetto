@@ -34,6 +34,9 @@ public:
   void set_border(boost::python::numpy::ndarray const & array);
   void add_tree_to_border(double average_dist, double spread);
   boost::python::numpy::ndarray get_border_trees();
+  boost::python::numpy::ndarray get_iner_trees();
+
+  void add_interior_tree(size_t total_tree);
 
 };
 

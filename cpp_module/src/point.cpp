@@ -22,14 +22,14 @@ Point operator*(const Point &p, const double &x)
     Point res = p;
     res.x *= x;
     res.y *= x;
-    return p;
+    return res;
 }
 Point operator/(const Point &p, const double &x)
 {
     Point res = p;
     res.x /= x;
     res.y /= x;
-    return p;
+    return res;
 }
 
 Point& operator *=(Point& a, const double& b)
