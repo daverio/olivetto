@@ -18,6 +18,8 @@ Point operator/(const Point &p, const double &x);
 
 Point& operator *=(Point& a, const double& b);
 Point& operator /=(Point& a, const double& b);
+Point& operator -=(Point& a, const Point& b);
+Point& operator +=(Point& a, const Point& b);
 
 double dist(const Point& a, const Point& b);
 

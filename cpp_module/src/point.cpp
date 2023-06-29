@@ -45,6 +45,19 @@ Point& operator /=(Point& a, const double& b)
     return a;
 }
 
+Point& operator -=(Point& a, const Point& b)
+{
+    a.x -= b.x;
+    a.y -= b.y;
+    return a;
+}
+Point& operator +=(Point& a, const Point& b)
+{
+    a.x += b.x;
+    a.y += b.y;
+    return a;
+}
+
 
 double Point::norm()
 {

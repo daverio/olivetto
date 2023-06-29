@@ -2,7 +2,6 @@ PYTHON_MODULE := ../oliveto.so
 
 SOURCE_PATH := /home/daverio/Documents/olivetto/cpp_module/src
 
-
 CXX := g++
 CXXFLAGS_COMPILE := -std=c++17 -O3 -fPIC
 INCLUDES := -I$(SOURCE_PATH) -I/usr/include/python3.11/

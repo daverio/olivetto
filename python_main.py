@@ -12,14 +12,20 @@ def main():
 
     borderTrees = sim.get_border_trees()
 
-    sim.add_interior_tree(4000)
+    sim.add_interior_tree(130)
 
     inerTrees = sim.get_iner_trees()
+    for i in range(1000):
+        sim.make_step(0.2,10,20,0.05,0.1)
+    inerTrees_onestep = sim.get_iner_trees()
 
     plt.figure()
     plt.scatter(borderTrees[:,0],borderTrees[:,1])
-    plt.scatter(inerTrees[:,0],inerTrees[:,1])
+    #plt.scatter(inerTrees[:,0],inerTrees[:,1])
+    plt.scatter(inerTrees_onestep[:,0],inerTrees_onestep[:,1])
     plt.show()
+
+    
 
 
 if __name__ == "__main__":

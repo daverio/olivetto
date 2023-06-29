@@ -41,6 +41,7 @@ void Oliveto::set_border(boost::python::numpy::ndarray const & array)
     border[i].x -= PointOffset.x;
     border[i].y -= PointOffset.y;
   }
+  offset = PointOffset;
 }
 
 void Oliveto::add_tree_to_border(double average_dist, double spread)
@@ -102,7 +103,7 @@ boost::python::numpy::ndarray Oliveto::get_border_trees()
   return res;
 }
 
-boost::python::numpy::ndarray Oliveto::get_iner_trees()
+boost::python::numpy::ndarray Oliveto::get_inner_trees()
 {
   Py_intptr_t shape[2] = {(long)num_trees,2};
   boost::python::numpy::ndarray res = boost::python::numpy::zeros(2, shape, boost::python::numpy::dtype::get_builtin<double>());
@@ -120,6 +121,8 @@ void Oliveto::add_interior_tree(size_t total_tree)
 {
   num_trees = total_tree - num_borderTrees;
   trees = new Point[num_trees];
+  trees_vel = new Point[num_trees];
+  force = new Point[num_trees];
 
   //find recangle
   Point offset,span;
@@ -135,7 +138,7 @@ void Oliveto::add_interior_tree(size_t total_tree)
     if(border[i].y>span.y)span.y = border[i].y;
   }
   span = span - offset;
-  std::cout<<offset<<"  "<<span<<std::endl;
+  //std::cout<<offset<<"  "<<span<<std::endl;
   unsigned long seed = 123;
 
 
@@ -160,15 +163,142 @@ void Oliveto::add_interior_tree(size_t total_tree)
     if(InsidePolygon(border,borderSize-1,newTree))
     {
       trees[n] = newTree;
+      trees_vel[n].x = 0;
+      trees_vel[n].y = 0;
       n++;
     }
 
   }
-
-  
-  
   gsl_rng_free(rx);
   gsl_rng_free(ry);
+
+}
+void Oliveto::make_step(double delta_t, double coupling,double range, double viscosity, double damping)
+{
+  if(viscosity<0 || viscosity>1 || damping<0 || damping>1)
+  {
+    std::cout<<"viscosity and damaping needs to be in [0,1]"<<std::endl;
+  }
+  dt = delta_t;
+  compute_force(coupling,range);
+  update_vel(damping);
+  displace_trees(viscosity);
+}
+
+Point Oliveto::compute_pair_force(const Point & t1, const Point & t2, double coupling, double range)
+{
+
+  Point force = t2 - t1;
+
+  double dist = force.norm();
+  //if(dist<0.50)dist = 0.5;
+
+  if(dist < range)
+  {
+    force *= coupling / (dist*dist*dist);
+  }
+  else
+  {
+    force.x=0;
+    force.y=0;
+  }
+  return force;
+}
+
+void Oliveto::compute_force(double coupling, double range)
+{ 
+  //first compute the force from the borders
+  for(int i = 0; i< num_trees; i++)
+  {
+    force[i].x = 0;
+    force[i].y = 0;
+    for(int j=0;j<num_borderTrees;j++)
+    {
+      force[i] += compute_pair_force(borderTrees[j],trees[i],coupling,range);
+    }
+  }
+
+  for(int i = 0; i< num_trees-1; i++)
+  {
+    for(int j = i+1; j< num_trees; j++)
+    {
+      Point f = compute_pair_force(trees[j],trees[i],coupling,range);
+      force[i] += f;
+      force[j] -= f;
+    }
+  }
+}
+void Oliveto::update_vel(double damping)
+{
+  for(size_t i=0; i<num_trees; i++)
+  {
+    trees_vel[i] *= 1.0-damping;
+    trees_vel[i] += force[i] *dt;
+  }
+}
+
+
+void Oliveto::displace_trees(double viscosity)
+{
+  for(size_t i=0; i<num_trees; i++)
+  {
+    Point disp = trees_vel[i] * dt * (1.0-viscosity);
+    move_tree(trees[i],trees_vel[i],disp,border);
+  }
+}
+
+void Oliveto::move_tree(Point & Tree, Point & vel, Point & displacement, Point const * const border, int border_nocol)
+{
+
+  Point col;
+  Point new_pos = Tree + displacement;
+  int bnocol;
+  //check if colisions:
+
+  // if not
+  // Tree = Tree + displacement
+  // if yes
+  // move the tree to the colision point, reset displacement call move_tree again with new displacement
+  // reset the direction of velocity
+  // to do that we need colision detection to return the point of colision
+  bool col_flag = false;
+  for(int i = 0; i < borderSize - 1;i++)
+  {
+    if(i!=border_nocol)
+    {
+      col_flag = check_colision(Tree, new_pos, border[i], border[i+1],col);
+      if(col_flag)
+      {
+        bnocol = i;
+        break;  
+      }
+    }
+  }
+
+  if(col_flag)
+  {
+    double vel_norm = vel.norm();
+    double dist_to_do = displacement.norm() - (col - Tree).norm();
+    
+
+    //find new direction (after colision)
+
+    Point normal,bvect;
+    bvect =  border[bnocol+1] -  border[bnocol];
+    normal.x = -bvect.y;
+    normal.y = bvect.x;
+    normal /= normal.norm();
+
+    Tree = col;
+    vel =  vel - normal*2*(vel.x*normal.x + vel.y*normal.y);
+    displacement = vel * dist_to_do / vel_norm;
+
+    if( displacement.norm()>0) move_tree(Tree, vel, displacement, border, bnocol);
+  }
+  else
+  {
+    Tree = new_pos;
+  }
 
 
 }
