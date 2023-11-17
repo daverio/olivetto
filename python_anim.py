@@ -1,9 +1,10 @@
 import numpy as np
 import oliveto
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-
+matplotlib.use('Qt5Agg')
 
 
 
@@ -20,7 +21,7 @@ class Simulation(object):
                  damping,
                  border_dist,
                  border_spread):
-        self.data_path = '/home/daverio/Documents/oliveto_data/'
+        self.data_path = '/home/daverio/documents/fun/olivetto/data/'
         
 
         self.border_8m = np.loadtxt(self.data_path + border_file[2], delimiter=',')
@@ -45,13 +46,16 @@ class Simulation(object):
         self.border_5m[:,1] -= self.offset[1]
         self.border_8m[:,0] -= self.offset[0]
         self.border_8m[:,1] -= self.offset[1]
+
+        self.sim.add_tree(self.num_tree,self.border_tree_flag,border_dist,border_spread)
+
         if(self.border_tree_flag == True):
             self.sim.add_tree_to_border(border_dist,border_spread)
             self.border_trees = self.sim.get_border_trees() 
 
         self.num_border_tree = self.sim.get_number_border_tree()
-        self.sim.add_interior_tree(self.num_tree)
-        self.num_inner_tree = self.num_tree - self.num_border_tree
+        self.num_inner_tree = self.sim.get_number_inner_tree()
+        self.border_trees = self.sim.get_border_trees()
         self.inner_tree = self.sim.get_inner_trees()
 
     def update_inner_tree(self):
@@ -65,13 +69,16 @@ class Simulation(object):
         self.inner_tree = self.sim.get_inner_trees()
 
     def plot(self):
+        print("ploting...")
         plt.ion()
         plt.figure()
+        ax = plt.gca()
+        ax.set_aspect('equal', adjustable='box')
         plt.plot(self.border[:,0],self.border[:,1],color='grey',linestyle='dashed')
         plt.scatter(self.inner_tree[:,0],self.inner_tree[:,1],color='blue')
         if(self.border_tree_flag == True):
             plt.scatter(self.border_trees[:,0],self.border_trees[:,1],color='blue')
-
+        plt.show()
 
     def run_with_anim(self,num_steps,dt):
         self.dt = dt
@@ -85,13 +92,25 @@ class Simulation(object):
 
         self.scat_anim = self.ax_anim.scatter(self.inner_tree[:,0],self.inner_tree[:,1],color='blue')
 
-        self.animation = animation.FuncAnimation(self.fig_anim,self.update_anim,frames=10000,interval = 5)
+        self.animation = animation.FuncAnimation(self.fig_anim,self.update_anim,frames=1000,interval = 100)
         plt.show()
 
     def update_anim(self,i):
         self.update_inner_tree()
         self.scat_anim.set_offsets(np.c_[self.inner_tree[:,0],self.inner_tree[:,1]])
 
+    def computeStats(self):
+        pass
 
+    def outputTrees(self, outputfile):
+        print(self.inner_tree)
+        print(self.offset)
+        output = self.inner_tree + self.offset
+
+        np.savetxt(outputfile, output, delimiter=",")
+
+
+        if(self.border_tree_flag):
+            print(self.border_trees)
        
         

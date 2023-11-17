@@ -1,6 +1,6 @@
 PYTHON_MODULE := ../oliveto.so
 
-SOURCE_PATH := /home/daverio/Documents/olivetto/cpp_module/src
+SOURCE_PATH := /home/daverio/documents/fun/olivetto/cpp_module/src
 
 CXX := g++
 CXXFLAGS_COMPILE := -std=c++17 -O3 -fPIC

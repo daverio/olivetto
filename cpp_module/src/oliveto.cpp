@@ -44,6 +44,14 @@ void Oliveto::set_border(boost::python::numpy::ndarray const & array)
   offset = PointOffset;
 }
 
+void Oliveto::add_tree(size_t total_tree, bool flagBorder, double average_dist /* =7 */, double spread /*= 1*/)
+{
+  if(flagBorder) {
+    add_tree_to_border(average_dist,spread);
+  }
+  add_interior_tree(total_tree);
+}
+
 void Oliveto::add_tree_to_border(double average_dist, double spread)
 { 
   //compute the length of the border;

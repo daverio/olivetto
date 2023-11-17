@@ -46,6 +46,10 @@ public:
   boost::python::numpy::ndarray get_inner_trees();
 
   void add_interior_tree(size_t total_tree);
+
+  void add_tree(size_t total_tree, bool flagBorder, double average_dis = 7, double spread = 1);
+
+
   void update_vel(double damping);
   void displace_trees(double viscosity);
   void move_tree(Point & Tree, Point & vel, Point & displacement, Point const * const  border, int border_nocol = -1);

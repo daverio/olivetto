@@ -20,6 +20,9 @@
 *.mod
 *.smod
 
+#output tests:
+test.txt
+
 # Compiled Static libraries
 *.lai
 *.la
