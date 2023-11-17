@@ -25,8 +25,6 @@ def main():
     plt.scatter(inerTrees_onestep[:,0],inerTrees_onestep[:,1])
     plt.show()
 
-    
-
 
 if __name__ == "__main__":
     main()
