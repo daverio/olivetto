@@ -46,13 +46,7 @@ class Simulation(object):
         self.border_5m[:,1] -= self.offset[1]
         self.border_8m[:,0] -= self.offset[0]
         self.border_8m[:,1] -= self.offset[1]
-
         self.sim.add_tree(self.num_tree,self.border_tree_flag,border_dist,border_spread)
-
-        if(self.border_tree_flag == True):
-            self.sim.add_tree_to_border(border_dist,border_spread)
-            self.border_trees = self.sim.get_border_trees() 
-
         self.num_border_tree = self.sim.get_number_border_tree()
         self.num_inner_tree = self.sim.get_number_inner_tree()
         self.border_trees = self.sim.get_border_trees()

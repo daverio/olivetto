@@ -47,7 +47,7 @@ public:
 
   void add_interior_tree(size_t total_tree);
 
-  void add_tree(size_t total_tree, bool flagBorder, double average_dis = 7, double spread = 1);
+  void add_tree(size_t total_tree, bool flagBorder, double average_dis = 7, double spread = 1, bool flagBorderReal = true);
 
 
   void update_vel(double damping);

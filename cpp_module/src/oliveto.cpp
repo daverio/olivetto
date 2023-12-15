@@ -7,6 +7,7 @@
 #include <cmath>
 #include <gsl/gsl_rng.h>
 #include "polygone_tests.hpp"
+#include <chrono>
 
 
 void Oliveto::set_border(boost::python::numpy::ndarray const & array)
@@ -44,7 +45,7 @@ void Oliveto::set_border(boost::python::numpy::ndarray const & array)
   offset = PointOffset;
 }
 
-void Oliveto::add_tree(size_t total_tree, bool flagBorder, double average_dist /* =7 */, double spread /*= 1*/)
+void Oliveto::add_tree(size_t total_tree, bool flagBorder, double average_dist /* =7 */, double spread /*= 1*/, bool flagBorderReal /*= true*/)
 {
   if(flagBorder) {
     add_tree_to_border(average_dist,spread);
@@ -147,7 +148,9 @@ void Oliveto::add_interior_tree(size_t total_tree)
   }
   span = span - offset;
   //std::cout<<offset<<"  "<<span<<std::endl;
-  unsigned long seed = 123;
+  auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+  auto value = now_ms.time_since_epoch();
+  unsigned long seed = now_ms.time_since_epoch().count();
 
 
   //generate the random points:
