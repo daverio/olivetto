@@ -8,7 +8,7 @@ BOOST_PYTHON_MODULE(oliveto)
   boost::python::numpy::initialize();
 
   boost::python::class_<Oliveto>("Oliveto")
-        .def("set_border", &Oliveto::set_border)
+        .def("set_borders", &Oliveto::set_borders)
         .def("add_tree", &Oliveto::add_tree)
         .def("get_border_trees", &Oliveto::get_border_trees)
         .def("get_inner_trees", &Oliveto::get_inner_trees)

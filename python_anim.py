@@ -21,7 +21,7 @@ class Simulation(object):
                  damping,
                  border_dist,
                  border_spread):
-        self.data_path = '/home/daverio/documents/fun/olivetto/data/'
+        self.data_path = '/home/daverio/Documents/olivetto/data/'
         
 
         self.border_8m = np.loadtxt(self.data_path + border_file[2], delimiter=',')
@@ -38,7 +38,7 @@ class Simulation(object):
 
         #setup the simulation:
         self.sim = oliveto.Oliveto()
-        self.sim.set_border(self.border_8m)
+        self.sim.set_borders(self.border_5m, self.border_8m)
         self.offset = self.sim.get_offset()
         self.border[:,0] -= self.offset[0]
         self.border[:,1] -= self.offset[1]
@@ -68,10 +68,11 @@ class Simulation(object):
         plt.figure()
         ax = plt.gca()
         ax.set_aspect('equal', adjustable='box')
-        plt.plot(self.border[:,0],self.border[:,1],color='grey',linestyle='dashed')
+        plt.plot(self.border[:,0],self.border[:,1],color='black')
+        plt.plot(self.border_5m[:,0],self.border_5m[:,1],color='grey',linestyle='dashed')
         plt.scatter(self.inner_tree[:,0],self.inner_tree[:,1],color='blue')
-        if(self.border_tree_flag == True):
-            plt.scatter(self.border_trees[:,0],self.border_trees[:,1],color='blue')
+        #if(self.border_tree_flag == True):
+        #    plt.scatter(self.border_trees[:,0],self.border_trees[:,1],color='blue')
         plt.show()
 
     def run_with_anim(self,num_steps,dt):
@@ -86,7 +87,7 @@ class Simulation(object):
 
         self.scat_anim = self.ax_anim.scatter(self.inner_tree[:,0],self.inner_tree[:,1],color='blue')
 
-        self.animation = animation.FuncAnimation(self.fig_anim,self.update_anim,frames=1000,interval = 100)
+        self.animation = animation.FuncAnimation(self.fig_anim,self.update_anim,frames=1000,interval = 50)
         plt.show()
 
     def update_anim(self,i):

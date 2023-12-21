@@ -18,7 +18,7 @@ private:
     Point * trees_;
     size_t numTrees_;
     Point * treesVel_;
-    Point * force;
+    Point * force_;
     double dt_;
     Point offset_;
 
@@ -49,7 +49,25 @@ public:
     void set_borders(boost::python::numpy::ndarray const & hedge,
                      boost::python::numpy::ndarray const & limit);
 
+    void add_tree(size_t total_tree, bool flagHedge, double average_dist =7, double spread = 1);
+    void make_step(double delta_t, double coupling, double range, double viscosity, double damping);
+
+    boost::python::numpy::ndarray get_border_trees();
+    boost::python::numpy::ndarray get_inner_trees();
+    boost::python::numpy::ndarray get_trees_dist();
+    int get_number_border_tree(){return numHedgeTrees_;}
+    int get_number_inner_tree(){return numTrees_;}
+    boost::python::tuple get_offset(){return boost::python::make_tuple(offset_.x,offset_.y);}
+
 private:
     void set_hedge(boost::python::numpy::ndarray const & array);
     void set_limit(boost::python::numpy::ndarray const & array);
+    void add_tree_to_hedge(double average_dist, double spread);
+    void add_interior_tree(size_t numTrees);
+    
+    void update_vel(double damping);
+    void displace_trees(double viscosity);
+    void move_tree(Point & Tree, Point & vel, Point & displacement, Point const * const  border, size_t const borderSize, int border_nocol = -1);
+    void compute_force(double coupling, double range);
+    Point compute_pair_force(const Point & t1, const Point & t2, double coupling, double range);
 };

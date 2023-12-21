@@ -20,8 +20,9 @@
 *.mod
 *.smod
 
-#output tests:
+#output:
 test.txt
+outputs/*
 
 # Compiled Static libraries
 *.lai
@@ -33,4 +34,4 @@ test.txt
 *.exe
 *.out
 *.app
-__pycache__/python_utils.cpython-311.pyc
+__pycache__/*
