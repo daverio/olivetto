@@ -193,6 +193,26 @@ boost::python::numpy::ndarray Oliveto::get_inner_trees()
   return res;
 }
 
+boost::python::numpy::ndarray Oliveto::get_trees_dist()
+{
+  Py_intptr_t shape[1] = {(long)numTrees_};
+  boost::python::numpy::ndarray res = boost::python::numpy::zeros(1, shape, boost::python::numpy::dtype::get_builtin<double>());
+  double * arr = reinterpret_cast<double*>(res.get_data());
+  for(size_t i=0;i<numTrees_;i++)
+  {
+    arr[i] = DBL_MAX;
+    for(size_t j=0;j<numTrees_;j++)
+    {
+      if(j!=i)
+      {
+        double d = dist(trees_[i],trees_[j]);
+        if(d < arr[i])arr[i] = d;
+      }
+    }
+  }
+  return res;
+}
+
 void Oliveto::make_step(double delta_t, double coupling,double range, double viscosity, double damping)
 {
   if(viscosity<0 || viscosity>1 || damping<0 || damping>1)

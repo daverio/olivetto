@@ -15,6 +15,7 @@ BOOST_PYTHON_MODULE(oliveto)
         .def("make_step",&Oliveto::make_step)
         .def("get_number_border_tree",&Oliveto::get_number_border_tree)
         .def("get_number_inner_tree",&Oliveto::get_number_inner_tree)
+        .def("get_trees_dist",&Oliveto::get_trees_dist)
         .def("get_offset",&Oliveto::get_offset)
     ;
 }

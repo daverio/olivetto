@@ -61,9 +61,15 @@ class Simulation(object):
         for i in range(num_steps):
             self.sim.make_step(self.dt,self.force_coupling,self.force_range,self.viscosity,self.damping)
         self.inner_tree = self.sim.get_inner_trees()
+        self.inner_tree_min_dist = self.sim.get_trees_dist()
+
+
 
     def plot(self):
         print("ploting...")
+        self.inner_tree = self.sim.get_inner_trees()
+        self.inner_tree_min_dist = self.sim.get_trees_dist()
+
         plt.ion()
         plt.figure()
         ax = plt.gca()
@@ -73,6 +79,11 @@ class Simulation(object):
         plt.scatter(self.inner_tree[:,0],self.inner_tree[:,1],color='blue')
         #if(self.border_tree_flag == True):
         #    plt.scatter(self.border_trees[:,0],self.border_trees[:,1],color='blue')
+        
+        #plot the distribution of dists...
+        plt.figure()
+        plt.hist(self.inner_tree_min_dist,10)
+
         plt.show()
 
     def run_with_anim(self,num_steps,dt):
